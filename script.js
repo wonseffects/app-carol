@@ -25,36 +25,43 @@ document.addEventListener('DOMContentLoaded', async () => {
 
 async function loadCustomers() {
     try {
-        const response = await fetch(API_URL);
-        if (response.ok) {
-            customers = await response.json();
-        } else {
-            console.warn('Servidor offline? Usando localStorage como fallback...');
-            customers = JSON.parse(localStorage.getItem('gerenciar_amor_customers')) || [];
+        // Só tenta o servidor se estivermos no localhost
+        if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+            const response = await fetch(API_URL);
+            if (response.ok) {
+                customers = await response.json();
+                updateDashboard();
+                return;
+            }
         }
     } catch (err) {
-        console.error('Erro ao carregar dados do servidor:', err);
-        customers = JSON.parse(localStorage.getItem('gerenciar_amor_customers')) || [];
+        console.log('Ambiente Cloud ou Servidor Offline - Usando LocalStorage');
     }
+
+    // Fallback para LocalStorage (Vercel ou Servidor Offline)
+    customers = JSON.parse(localStorage.getItem('gerenciar_amor_customers')) || [];
     updateDashboard();
 }
 
 async function saveCustomers() {
-    // Save to local for extra safety
+    // Sempre salva no LocalStorage para garantir que você não perca nada no navegador
     localStorage.setItem('gerenciar_amor_customers', JSON.stringify(customers));
 
-    // Save to server
-    try {
-        await fetch(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(customers)
-        });
-    } catch (err) {
-        console.error('Erro ao salvar no servidor:', err);
+    // Se estiver no PC (localhost), tenta salvar no arquivo db.json
+    if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+        try {
+            await fetch(API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(customers)
+            });
+        } catch (err) {
+            console.error('Erro ao salvar no arquivo db.json:', err);
+        }
     }
     updateDashboard();
 }
+
 
 function addCustomer(event) {
     event.preventDefault();
