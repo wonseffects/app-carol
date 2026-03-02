@@ -1,0 +1,177 @@
+:root {
+    --primary-pink: #FF007A;
+    --primary-purple: #7000FF;
+    --bg-light: #F8F9FA;
+    --text-dark: #2D3436;
+    --pink-gradient: linear-gradient(135deg, #FF007A 0%, #D100D1 100%);
+    --purple-gradient: linear-gradient(135deg, #7000FF 0%, #4D00B8 100%);
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #fce4ec; /* Background levemente rosado */
+    color: var(--text-dark);
+}
+
+.text-gradient {
+    background: var(--pink-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.navbar {
+    background: var(--pink-gradient) !important;
+    box-shadow: 0 4px 15px rgba(209, 0, 209, 0.2);
+}
+
+.btn-primary {
+    background: var(--pink-gradient);
+    border: none;
+    padding: 10px 25px;
+    border-radius: 12px;
+    transition: transform 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: scale(1.05);
+    background: var(--pink-gradient);
+}
+
+.btn-purple {
+    background: var(--purple-gradient);
+    color: white;
+    border: none;
+    border-radius: 12px;
+}
+
+.btn-purple:hover {
+    color: white;
+    opacity: 0.9;
+}
+
+.stats-card {
+    border-radius: 20px;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stats-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1) !important;
+}
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 14px;
+    font-size: 1.5rem;
+}
+
+.bg-pink-light { background-color: #ffeef3; }
+.bg-purple-light { background-color: #f1e9ff; }
+.bg-orange-light { background-color: #fff4e5; }
+.bg-success-light { background-color: #e6fffa; }
+
+.text-pink { color: var(--primary-pink); }
+.text-purple { color: var(--primary-purple); }
+.text-orange { color: #fd7e14; }
+
+.bg-gradient-pink { background: var(--pink-gradient); }
+.bg-gradient-purple { background: var(--purple-gradient); }
+
+.card {
+    border-radius: 20px;
+}
+
+.progress {
+    border-radius: 12px;
+    background-color: #eee;
+}
+
+.search-box {
+    max-width: 300px;
+}
+
+.search-box .input-group-text, .search-box input {
+    border-color: #eee;
+    background-color: #f8f9fa;
+}
+
+/* Animations */
+.animate-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+    opacity: 0;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Table styles */
+.table {
+    border-collapse: separate;
+    border-spacing: 0 10px;
+}
+
+.table tbody tr {
+    background: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    border-radius: 10px;
+}
+
+.table td {
+    padding: 15px;
+    border: none;
+}
+
+.table thead th {
+    background: transparent;
+    border: none;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.customer-progress-container {
+    width: 150px;
+}
+
+.btn-action {
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    margin-right: 5px;
+    transition: all 0.2s;
+}
+
+.btn-pay {
+    background-color: #e6fffa;
+    color: #38b2ac;
+}
+
+.btn-pay:hover {
+    background-color: #38b2ac;
+    color: white;
+}
+
+.btn-delete {
+    background-color: #fff5f5;
+    color: #e53e3e;
+}
+
+.btn-delete:hover {
+    background-color: #e53e3e;
+    color: white;
+}

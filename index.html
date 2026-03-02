@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Amor - Carol Gerente de Vendas</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css">
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="bi bi-heart-fill me-2"></i>Gerenciar Amor
+            </a>
+            <div class="d-flex align-items-center">
+                <span class="navbar-text text-white d-none d-md-inline me-3">
+                    Olá, Carol Gerente de Vendas
+                </span>
+                <div class="dropdown">
+                    <button class="btn btn-outline-light btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                        <i class="bi bi-cloud-arrow-down-fill me-1"></i> Dados
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0">
+                        <li><a class="dropdown-item" href="#" onclick="exportData()"><i
+                                    class="bi bi-download me-2"></i>Salvar Backup (.json)</a></li>
+                        <li><a class="dropdown-item" href="#" onclick="document.getElementById('importFile').click()"><i
+                                    class="bi bi-upload me-2"></i>Carregar Backup</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item text-danger" href="#" onclick="clearAllData()"><i
+                                    class="bi bi-trash me-2"></i>Limpar Tudo</a></li>
+                    </ul>
+                </div>
+                <input type="file" id="importFile" style="display: none;" accept=".json" onchange="importData(event)">
+            </div>
+
+        </div>
+    </nav>
+
+    <div class="container py-4">
+        <!-- Dashboard Header -->
+        <div class="row mb-4 animate-up">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <h2 class="fw-bold text-gradient">Visão Geral</h2>
+                <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addCustomerModal">
+                    <i class="bi bi-plus-circle me-2"></i>Adicionar Comprador
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="row g-4 mb-4">
+            <div class="col-md-4">
+                <div class="stats-card card h-100 border-0 shadow-sm animate-up" style="animation-delay: 0.1s;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="stat-icon bg-pink-light"><i class="bi bi-currency-dollar text-pink"></i></span>
+                            <span class="badge bg-success-light text-success">+ Total Vendas</span>
+                        </div>
+                        <h3 class="fw-bold mb-1" id="totalRevenue">R$ 0,00</h3>
+                        <p class="text-muted small mb-0">Total a receber dos clientes</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card card h-100 border-0 shadow-sm animate-up" style="animation-delay: 0.2s;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="stat-icon bg-purple-light"><i
+                                    class="bi bi-check-circle text-purple"></i></span>
+                            <span class="badge bg-purple-light text-purple">Já Pago</span>
+                        </div>
+                        <h3 class="fw-bold mb-1" id="totalPaid">R$ 0,00</h3>
+                        <p class="text-muted small mb-0">Valor total que já entrou</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="stats-card card h-100 border-0 shadow-sm animate-up" style="animation-delay: 0.3s;">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="stat-icon bg-orange-light"><i class="bi bi-truck text-orange"></i></span>
+                            <span class="badge bg-orange-light text-orange">Dívida Fornecedor</span>
+                        </div>
+                        <h3 class="fw-bold mb-1" id="supplierDebt">R$ 0,00</h3>
+                        <p class="text-muted small mb-0">Ainda falta pagar conforme vendas</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Progress and Chart -->
+        <div class="row g-4 mb-4">
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm p-4 animate-up" style="animation-delay: 0.4s;">
+                    <h5 class="fw-bold mb-3">Progresso para Quitar Fornecedor</h5>
+                    <div class="progress mb-2" style="height: 25px;">
+                        <div id="supplierProgressBar"
+                            class="progress-bar progress-bar-striped progress-bar-animated bg-gradient-pink"
+                            role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0"
+                            aria-valuemax="100">0%</div>
+                    </div>
+                    <p class="text-muted small d-flex justify-content-between mt-2">
+                        <span>Restante: <strong id="supplierRemaining">R$ 0,00</strong></span>
+                        <span id="supplierProgressText">0% concluído</span>
+                    </p>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm p-4 animate-up h-100" style="animation-delay: 0.5s;">
+                    <h5 class="fw-bold mb-3">Resumo Financeiro</h5>
+                    <canvas id="debtChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Customer List -->
+        <div class="row animate-up" style="animation-delay: 0.6s;">
+            <div class="col-12">
+                <div class="card border-0 shadow-sm p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h5 class="fw-bold mb-0">Meus Compradores</h5>
+                        <div class="input-group search-box">
+                            <span class="input-group-text bg-white border-end-0"><i class="bi bi-search"></i></span>
+                            <input type="text" class="form-control border-start-0" id="searchCustomer"
+                                placeholder="Buscar cliente...">
+                        </div>
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover align-middle">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Cliente</th>
+                                    <th>Status do Pagamento</th>
+                                    <th>Total da Dívida</th>
+                                    <th>Quanto Pagou</th>
+                                    <th>Ações</th>
+                                </tr>
+                            </thead>
+                            <tbody id="customerTableBody">
+                                <!-- JavaScript will populate this -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Customer Modal -->
+    <div class="modal fade" id="addCustomerModal" tabindex="-1" aria-labelledby="addCustomerModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-gradient-pink text-white border-0">
+                    <h5 class="modal-title fw-bold" id="addCustomerModalLabel">Novo Comprador</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="addCustomerForm">
+                        <div class="mb-3">
+                            <label for="customerName" class="form-label">Nome Completo</label>
+                            <input type="text" class="form-control" id="customerName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="customerPhone" class="form-label">Telefone (WhatsApp)</label>
+                            <input type="tel" class="form-control" id="customerPhone" placeholder="(00) 00000-0000">
+                        </div>
+                        <div class="mb-3">
+                            <label for="customerValue" class="form-label">Valor Gasto (Total da Dívida)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" step="0.01" class="form-control" id="customerValue" required>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="customerCost" class="form-label">Custo do Fornecedor (Opcional - Padrão
+                                70%)</label>
+                            <div class="input-group">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" step="0.01" class="form-control" id="customerCost"
+                                    placeholder="Deixe em branco p/ calcular 70%">
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="customerNotes" class="form-label">Anotações (Data de pagamento,
+                                observações...)</label>
+                            <textarea class="form-control" id="customerNotes" rows="3"
+                                placeholder="Ex: Disse que me paga dia 03/02"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Salvar Comprador</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Payment Modal -->
+    <div class="modal fade" id="paymentModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header bg-gradient-purple text-white border-0">
+                    <h5 class="modal-title fw-bold">Registrar Pagamento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="mb-3">Quanto <strong id="paymentCustomerName"></strong> está pagando agora?</p>
+                    <form id="paymentForm">
+                        <input type="hidden" id="paymentCustomerId">
+                        <div class="mb-3">
+                            <label for="paymentValue" class="form-label">Valor Recebido</label>
+                            <div class="input-group text-lg">
+                                <span class="input-group-text">R$</span>
+                                <input type="number" step="0.01" class="form-control form-control-lg" id="paymentValue"
+                                    required>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-purple w-100 py-2 fw-bold">Confirmar Pagamento</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>

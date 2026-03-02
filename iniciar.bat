@@ -1,0 +1,9 @@
+@echo off
+title Abrindo Gerenciar Amor...
+echo Instalando dependencias (na primeira vez pode demorar um pouco)...
+call npm install --no-audit
+echo.
+echo Iniciando servidor local...
+start http://localhost:3000
+node server.js
+pause
